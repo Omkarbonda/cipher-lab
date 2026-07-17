@@ -61,11 +61,8 @@ def decode(ciphertext: str, key: str) -> str:
         'Hello'
     """
     key = _validate_key(key)
-    # Invert the mapping: cipher letter -> plain letter
-    inverse_key = [''] * _ALPHA_SIZE
-    for i, ch in enumerate(key):
-        inverse_key[ord(ch) - ord('A')] = _ALPHA[i]
-    inverse_str = ''.join(inverse_key)
+    # Invert the mapping: build translation table from cipher alphabet → plain alphabet.
+    # str.maketrans(key, _ALPHA) maps each cipher letter back to its original plain letter.
     table = str.maketrans(key, _ALPHA)
     table.update(str.maketrans(key.lower(), _ALPHA.lower()))
     return ciphertext.translate(table)

@@ -81,14 +81,14 @@ function App() {
       {/* Main Content Area */}
       <main className="flex-grow max-w-7xl mx-auto px-6 py-12 flex flex-col justify-center items-center">
         <div className="w-full max-w-3xl text-center mb-12">
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-widest">
-            Phase 0: Environment Wired
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">
+            Phase 1 Complete ✓
           </span>
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mt-4 mb-6 text-slate-100">
-            Stack Scaffolded & Verified
+            Backend Engine Ready
           </h2>
           <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
-            The FastAPI backend and React + Vite frontend are successfully communicating. Local routing, CORS, and proxy configurations are fully active.
+            4 classical ciphers implemented and tested (46/46 ✅). FastAPI backend and React frontend are connected. Phase 2 — cryptanalysis — coming next.
           </p>
         </div>
 
@@ -159,11 +159,11 @@ function App() {
             <p className="text-xs text-slate-400 leading-relaxed">
               Interactive simulators for classical ciphers (Caesar, Vigenère, Enigma) with live visualizers (rotors, frequency charts) and cracking tools.
             </p>
-            <div className="mt-4 pt-4 border-t border-slate-800/50 flex items-center text-xs text-slate-500 font-medium">
+            <div className="mt-4 pt-4 border-t border-slate-800/50 flex items-center text-xs text-emerald-500 font-medium">
               <svg className="w-3.5 h-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Module Locked (Pending Phase 1)
+              Phase 1 Done — Caesar, Vigenère, Substitution, Playfair
             </div>
           </div>
 

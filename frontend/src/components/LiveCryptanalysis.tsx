@@ -7,52 +7,60 @@ interface LiveCryptanalysisProps {
 
 export default function LiveCryptanalysis({ ioc, frequencies }: LiveCryptanalysisProps) {
   return (
-    <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex flex-col space-y-6">
-      <h2 className="text-lg font-bold text-slate-200 flex items-center">
-        <svg className="w-5 h-5 mr-2 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" />
-        </svg>
-        Live Cryptanalysis
-      </h2>
-
-      {/* Index of Coincidence Widget */}
-      <div className="flex flex-col space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-400 font-semibold">Index of Coincidence (IC)</span>
-          <span className="font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/25">
-            {ioc.toFixed(5)}
+    <div className="border border-ink-500 bg-ink-700/60">
+      {/* Panel header */}
+      <div className="flex items-center justify-between px-4 py-2 bg-ink-600/80 border-b border-ink-500">
+        <span className="text-[10px] text-parchment/40 tracking-[0.2em] uppercase">Live Cryptanalysis</span>
+        <span className="text-[9px] text-amber/50 tracking-[0.15em] uppercase flex items-center gap-1.5">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-amber opacity-50 animate-ping" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber" />
           </span>
-        </div>
-
-        {/* Progress bar visualizer for IC */}
-        <div className="w-full h-3 bg-slate-950 rounded-full relative overflow-hidden border border-slate-900">
-          {/* Random text IC marker (0.0385) */}
-          <div className="absolute left-[38.5%] top-0 w-0.5 h-full bg-slate-700 z-10" title="Random Text IC: 0.0385"></div>
-          {/* English text IC marker (0.0667) */}
-          <div className="absolute left-[66.7%] top-0 w-0.5 h-full bg-slate-700 z-10" title="English Text IC: 0.0667"></div>
-
-          {/* Active value fill */}
-          <div
-            className={`h-full transition-all duration-500 rounded-full ${
-              Math.abs(ioc - 0.0667) < 0.008
-                ? 'bg-gradient-to-r from-emerald-500 to-emerald-600'
-                : ioc > 0.08 ? 'bg-indigo-600' : 'bg-gradient-to-r from-amber-500 to-amber-600'
-            }`}
-            style={{ width: `${Math.min(ioc * 1000, 100)}%` }}
-          ></div>
-        </div>
-
-        <div className="flex justify-between text-[9px] font-mono text-slate-500 px-1">
-          <span>Random (0.0385)</span>
-          <span className="text-slate-400 font-bold">English (0.0667)</span>
-          <span>Monolithic (1.0)</span>
-        </div>
+          Monitoring
+        </span>
       </div>
 
-      {/* Live Frequency Distribution Comparison Bar chart */}
-      <div className="flex flex-col space-y-3">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Letter Frequencies vs. Standard English</span>
-        <FrequencyBarChart frequencies={frequencies} />
+      <div className="p-4 flex flex-col space-y-5">
+        {/* Index of Coincidence — amber gauge style */}
+        <div className="flex flex-col space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-parchment/60 tracking-[0.1em] uppercase">Index of Coincidence</span>
+            <span className="font-mono text-sm text-brass bg-brass/8 border border-brass/20 px-2 py-0.5">
+              {ioc.toFixed(5)}
+            </span>
+          </div>
+
+          {/* IC Gauge */}
+          <div className="w-full h-2 bg-ink-900 relative overflow-hidden border border-ink-500">
+            {/* Random text marker */}
+            <div className="absolute left-[38.5%] top-0 w-px h-full bg-parchment/10" />
+            {/* English text marker */}
+            <div className="absolute left-[66.7%] top-0 w-px h-full bg-parchment/20" />
+            {/* Active fill */}
+            <div
+              className={`h-full transition-all duration-500 ${
+                Math.abs(ioc - 0.0667) < 0.008
+                  ? 'bg-brass'
+                  : ioc > 0.08
+                  ? 'bg-amber/70'
+                  : 'bg-amber/50'
+              }`}
+              style={{ width: `${Math.min(ioc * 1000, 100)}%` }}
+            />
+          </div>
+
+          <div className="flex justify-between text-[8px] font-mono text-parchment/25 tracking-[0.05em]">
+            <span>Random (0.0385)</span>
+            <span className="text-parchment/40">English (0.0667)</span>
+            <span>Mono (1.0)</span>
+          </div>
+        </div>
+
+        {/* Frequency chart */}
+        <div className="flex flex-col space-y-2">
+          <span className="text-[10px] text-parchment/40 tracking-[0.2em] uppercase">Letter Frequencies vs English</span>
+          <FrequencyBarChart frequencies={frequencies} />
+        </div>
       </div>
     </div>
   );

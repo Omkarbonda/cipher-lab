@@ -58,24 +58,23 @@ export default function CipherConfig({
   setColumnarKey,
 }: CipherConfigProps) {
   return (
-    <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex flex-col space-y-4">
-      <h2 className="text-lg font-bold text-slate-200 flex items-center">
-        <svg className="w-5 h-5 mr-2 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-        </svg>
-        Cipher Configuration
-      </h2>
+    <div className="border border-ink-500 bg-ink-700/60">
+      {/* Panel header */}
+      <div className="flex items-center justify-between px-4 py-2 bg-ink-600/80 border-b border-ink-500">
+        <span className="text-[10px] text-parchment/40 tracking-[0.2em] uppercase">Cipher Configuration</span>
+        <span className="text-[9px] text-brass/50 tracking-[0.15em] uppercase">Selector</span>
+      </div>
 
-      {/* Tab buttons */}
-      <div className="flex flex-wrap border-b border-slate-850 p-1 bg-slate-950/80 rounded-xl gap-1">
+      {/* Mechanical selector tabs */}
+      <div className="flex flex-wrap border-b border-ink-500">
         {CIPHER_TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 min-w-[80px] py-2 text-xs font-semibold rounded-lg capitalize transition-all ${
+            className={`flex-1 min-w-[70px] py-2 text-[10px] font-semibold uppercase tracking-[0.15em] border-r border-ink-500 last:border-r-0 transition-all ${
               activeTab === tab
-                ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                ? 'bg-brass/10 text-brass border-b-2 border-b-brass'
+                : 'bg-ink-800/40 text-parchment/30 hover:bg-ink-700 hover:text-parchment/60'
             }`}
           >
             {tab}
@@ -83,8 +82,8 @@ export default function CipherConfig({
         ))}
       </div>
 
-      {/* Tab Inputs */}
-      <div key={activeTab} className="bg-slate-950/40 border border-slate-850 rounded-xl p-4 min-h-[100px] flex flex-col justify-center animate-fade-in">
+      {/* Active cipher params */}
+      <div key={activeTab} className="p-4 min-h-[80px] animate-fade-in">
         {activeTab === 'caesar' && (
           <CaesarConfig caesarShift={caesarShift} setCaesarShift={setCaesarShift} />
         )}

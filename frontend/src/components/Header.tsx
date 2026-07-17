@@ -1,29 +1,29 @@
 export default function Header() {
   return (
-    <header className="border-b border-slate-800/80 bg-slate-900/40 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+    <header className="border-b border-brass/20 bg-ink-700/80 backdrop-blur-md sticky top-0 z-50 px-6 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        <div className="flex items-center gap-3">
+          {/* Mechanical cog emblem */}
+          <div className="relative w-9 h-9 flex items-center justify-center">
+            <svg className="w-9 h-9 text-brass" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
             </svg>
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-violet-200 bg-clip-text text-transparent">
-              Cipher Lab & Secure Vault
+            <h1 className="text-base font-bold tracking-[0.15em] text-parchment uppercase">
+              Cipher Bureau
             </h1>
-            <p className="text-xs text-slate-400">Interactive Cryptography & Cryptanalysis Laboratory</p>
+            <p className="text-[10px] text-brass/70 tracking-[0.2em] uppercase">Classical Cryptanalysis Laboratory</p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+        <div className="flex items-center gap-2 border border-brass/15 bg-brass/5 rounded px-2.5 py-1">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-brass opacity-40 animate-ping" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-brass" />
           </span>
-          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
-            Connected to Engine
-          </span>
+          <span className="text-[9px] font-bold text-brass/80 tracking-[0.15em] uppercase">Engine Live</span>
         </div>
       </div>
     </header>

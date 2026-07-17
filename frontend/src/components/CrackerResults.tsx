@@ -25,72 +25,68 @@ export default function CrackerResults({
   }
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex flex-col space-y-4 animate-fadeIn">
-      <h2 className="text-lg font-bold text-slate-200 flex items-center justify-between">
-        <span className="flex items-center">
-          <svg className="w-5 h-5 mr-2 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          Cracker Output Candidates
-        </span>
-        <span className="text-[10px] text-slate-400 font-normal">Sorted by best fitness</span>
-      </h2>
+    <div className="border border-ink-500 bg-ink-700/60 animate-fade-in">
+      {/* Panel header */}
+      <div className="flex items-center justify-between px-4 py-2 bg-ink-600/80 border-b border-ink-500">
+        <span className="text-[10px] text-parchment/40 tracking-[0.2em] uppercase">Crack Candidates</span>
+        <span className="text-[9px] text-parchment/30 tracking-[0.15em] uppercase">Best fit first</span>
+      </div>
 
-      {/* Caesar Candidates list */}
-      {activeTab === 'caesar' && (
-        <div className="flex flex-col space-y-2.5">
-          {crackCandidates.map((c, idx) => (
-            <div
-              key={c.shift}
-              onClick={() => {
-                setCaesarShift(c.shift!);
-                setOutputText(c.plaintext);
-              }}
-              className={`flex flex-col space-y-1.5 p-3 rounded-xl border transition-all cursor-pointer text-left ${
-                idx === 0
-                  ? 'bg-indigo-500/10 border-indigo-500/35 hover:bg-indigo-500/15'
-                  : 'bg-slate-950/40 border-slate-850 hover:bg-slate-900/40'
-              }`}
-            >
-              <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="text-slate-200">Shift Key: {c.shift} {idx === 0 && '👑 (Best Guess)'}</span>
-                <span className="font-mono text-slate-400">Score: {c.score} | Chi2: {c.chi2}</span>
-              </div>
-              <p className="text-xs text-indigo-300 font-mono truncate">
-                {c.plaintext}
-              </p>
+      <div className="p-3 flex flex-col space-y-2">
+        {activeTab === 'caesar' && crackCandidates.map((c, idx) => (
+          <div
+            key={c.shift}
+            onClick={() => {
+              setCaesarShift(c.shift!);
+              setOutputText(c.plaintext);
+            }}
+            className={`flex flex-col space-y-1 p-3 border cursor-pointer transition-all text-left ${
+              idx === 0
+                ? 'bg-amber/8 border-amber/25 hover:bg-amber/12'
+                : 'bg-ink-800/40 border-ink-500 hover:bg-ink-700'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-semibold text-parchment/80 tracking-[0.05em]">
+                Shift {c.shift}{idx === 0 && ' — best'}
+              </span>
+              <span className="font-mono text-[9px] text-parchment/30">
+                χ² {c.chi2}
+              </span>
             </div>
-          ))}
-        </div>
-      )}
+            <p className="text-[11px] text-brass/70 font-mono truncate leading-relaxed">
+              {c.plaintext}
+            </p>
+          </div>
+        ))}
 
-      {/* Vigenere Candidates list */}
-      {activeTab === 'vigenere' && (
-        <div className="flex flex-col space-y-2.5">
-          {crackVigenereCandidates.map((c, idx) => (
-            <div
-              key={c.key}
-              onClick={() => {
-                setVigenereKey(c.key!);
-                setOutputText(c.plaintext);
-              }}
-              className={`flex flex-col space-y-1.5 p-3 rounded-xl border transition-all cursor-pointer text-left ${
-                idx === 0
-                  ? 'bg-indigo-500/10 border-indigo-500/35 hover:bg-indigo-500/15'
-                  : 'bg-slate-950/40 border-slate-850 hover:bg-slate-900/40'
-              }`}
-            >
-              <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="text-slate-200">Key: {c.key} (Len: {c.key_length}) {idx === 0 && '👑 (Best Guess)'}</span>
-                <span className="font-mono text-slate-400">Fitness: {c.score}</span>
-              </div>
-              <p className="text-xs text-indigo-300 font-mono truncate">
-                {c.plaintext}
-              </p>
+        {activeTab === 'vigenere' && crackVigenereCandidates.map((c, idx) => (
+          <div
+            key={c.key}
+            onClick={() => {
+              setVigenereKey(c.key!);
+              setOutputText(c.plaintext);
+            }}
+            className={`flex flex-col space-y-1 p-3 border cursor-pointer transition-all text-left ${
+              idx === 0
+                ? 'bg-amber/8 border-amber/25 hover:bg-amber/12'
+                : 'bg-ink-800/40 border-ink-500 hover:bg-ink-700'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-semibold text-parchment/80 tracking-[0.05em]">
+                Key: {c.key}{idx === 0 && ' — best'}
+              </span>
+              <span className="font-mono text-[9px] text-parchment/30">
+                fit: {c.score}
+              </span>
             </div>
-          ))}
-        </div>
-      )}
+            <p className="text-[11px] text-brass/70 font-mono truncate leading-relaxed">
+              {c.plaintext}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

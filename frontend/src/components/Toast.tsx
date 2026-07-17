@@ -7,15 +7,9 @@ interface ToastProps {
 }
 
 const typeStyles: Record<ToastProps['type'], string> = {
-  error: 'bg-rose-900/90 border-rose-700/50 text-rose-100',
-  success: 'bg-emerald-900/90 border-emerald-700/50 text-emerald-100',
-  info: 'bg-indigo-900/90 border-indigo-700/50 text-indigo-100',
-};
-
-const typeIcons: Record<ToastProps['type'], string> = {
-  error: '✕',
-  success: '✓',
-  info: 'ℹ',
+  error: 'bg-ink-600 border-red-800/50 text-red-300',
+  success: 'bg-ink-600 border-emerald-800/50 text-emerald-300',
+  info: 'bg-ink-600 border-brass/30 text-brass/90',
 };
 
 export default function Toast({ message, type, onClose }: ToastProps) {
@@ -30,15 +24,17 @@ export default function Toast({ message, type, onClose }: ToastProps) {
   return (
     <div className="fixed bottom-6 right-6 z-[100] animate-slide-in">
       <div
-        className={`flex items-center gap-3 px-5 py-3 rounded-xl border shadow-2xl backdrop-blur-md min-w-[280px] max-w-md ${typeStyles[type]}`}
+        className={`flex items-center gap-3 px-4 py-2.5 border shadow-2xl min-w-[260px] max-w-md font-mono text-sm ${typeStyles[type]}`}
       >
-        <span className="text-lg font-bold leading-none">{typeIcons[type]}</span>
-        <p className="text-sm font-medium flex-1">{message}</p>
+        <span className="font-mono text-lg leading-none opacity-70">
+          {type === 'error' ? '!' : type === 'success' ? 'OK' : 'i'}
+        </span>
+        <p className="flex-1 text-[12px] tracking-[0.02em]">{message}</p>
         <button
           onClick={onClose}
-          className="ml-1 text-current/60 hover:text-current transition-colors text-lg leading-none"
+          className="opacity-40 hover:opacity-80 transition-opacity text-sm"
         >
-          &times;
+          x
         </button>
       </div>
     </div>

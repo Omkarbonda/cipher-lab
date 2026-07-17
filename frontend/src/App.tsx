@@ -10,10 +10,6 @@ import CrackerResults from './components/CrackerResults';
 import Toast from './components/Toast';
 
 function App() {
-  // Connection and API health states (reserved for future connectivity checks)
-  void useState<boolean>(true);
-
-  // App core states
   const [activeTab, setActiveTab] = useState<CipherType>('caesar');
   const [inputText, setInputText] = useState<string>('Cryptography is the practice and study of techniques for secure communication in the presence of adversarial behavior.');
   const [outputText, setOutputText] = useState<string>('');
@@ -47,7 +43,6 @@ function App() {
     runAnalysis(inputText);
   }, [inputText]);
 
-  // Run letter count, frequency, and Index of Coincidence analysis
   const runAnalysis = async (text: string) => {
     if (!text.trim()) {
       setIoc(0);
@@ -63,28 +58,16 @@ function App() {
     }
   };
 
-  // Perform Encryption
   const handleEncrypt = async () => {
     let params: Record<string, unknown> = {};
-
-    if (activeTab === 'caesar') {
-      params = { shift: caesarShift };
-    } else if (activeTab === 'vigenere') {
-      params = { key: vigenereKey };
-    } else if (activeTab === 'substitution') {
-      params = { key: substitutionKey };
-    } else if (activeTab === 'playfair') {
-      params = { key: playfairKey };
-    } else if (activeTab === 'railfence') {
-      params = { rails: railFenceRails };
-    } else if (activeTab === 'beaufort') {
-      params = { key: beaufortKey };
-    } else if (activeTab === 'affine') {
-      params = { a: affineA, b: affineB };
-    } else if (activeTab === 'columnar') {
-      params = { key: columnarKey };
-    }
-
+    if (activeTab === 'caesar') params = { shift: caesarShift };
+    else if (activeTab === 'vigenere') params = { key: vigenereKey };
+    else if (activeTab === 'substitution') params = { key: substitutionKey };
+    else if (activeTab === 'playfair') params = { key: playfairKey };
+    else if (activeTab === 'railfence') params = { rails: railFenceRails };
+    else if (activeTab === 'beaufort') params = { key: beaufortKey };
+    else if (activeTab === 'affine') params = { a: affineA, b: affineB };
+    else if (activeTab === 'columnar') params = { key: columnarKey };
     try {
       const result = await encodeCipher(activeTab, inputText, params);
       setOutputText(result);
@@ -93,28 +76,16 @@ function App() {
     }
   };
 
-  // Perform Decryption
   const handleDecrypt = async () => {
     let params: Record<string, unknown> = {};
-
-    if (activeTab === 'caesar') {
-      params = { shift: caesarShift };
-    } else if (activeTab === 'vigenere') {
-      params = { key: vigenereKey };
-    } else if (activeTab === 'substitution') {
-      params = { key: substitutionKey };
-    } else if (activeTab === 'playfair') {
-      params = { key: playfairKey };
-    } else if (activeTab === 'railfence') {
-      params = { rails: railFenceRails };
-    } else if (activeTab === 'beaufort') {
-      params = { key: beaufortKey };
-    } else if (activeTab === 'affine') {
-      params = { a: affineA, b: affineB };
-    } else if (activeTab === 'columnar') {
-      params = { key: columnarKey };
-    }
-
+    if (activeTab === 'caesar') params = { shift: caesarShift };
+    else if (activeTab === 'vigenere') params = { key: vigenereKey };
+    else if (activeTab === 'substitution') params = { key: substitutionKey };
+    else if (activeTab === 'playfair') params = { key: playfairKey };
+    else if (activeTab === 'railfence') params = { rails: railFenceRails };
+    else if (activeTab === 'beaufort') params = { key: beaufortKey };
+    else if (activeTab === 'affine') params = { a: affineA, b: affineB };
+    else if (activeTab === 'columnar') params = { key: columnarKey };
     try {
       const result = await decodeCipher(activeTab, inputText, params);
       setOutputText(result);
@@ -123,12 +94,10 @@ function App() {
     }
   };
 
-  // Auto-Crack Ciphers
   const handleCrack = async () => {
     setIsCracking(true);
     setCrackCandidates([]);
     setCrackVigenereCandidates([]);
-
     try {
       if (activeTab === 'caesar') {
         const data = await crackCaesar(inputText);
@@ -142,10 +111,10 @@ function App() {
           setVigenereKey(data.best.key!);
           setCrackVigenereCandidates(data.candidates.slice(0, 5));
         } else {
-          showToast('Failed to crack Vigenère. Make sure ciphertext has enough English structures.', 'info');
+          showToast('Failed to crack Vigenère. Ciphertext may lack English structure.', 'info');
         }
       } else {
-        showToast('Substitution and Playfair cryptanalysis tools are under development (Phase 2 focuses on Caesar & Vigenère cracking).', 'info');
+        showToast('Substitution and Playfair cracking tools in development.', 'info');
       }
     } catch (err: any) {
       showToast(err.message ?? 'Cracking API failed.');
@@ -154,7 +123,6 @@ function App() {
     }
   };
 
-  // Helper to generate a random substitution alphabet
   const generateRandomSubstitutionKey = () => {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     for (let i = letters.length - 1; i > 0; i--) {
@@ -165,16 +133,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-ink text-parchment flex flex-col font-mono selection:bg-brass/30 selection:text-parchment-50">
+      <div className="scanlines" />
       <Header />
 
-      {/* Main Lab Space */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-        {/* LEFT COLUMN: Input Workspace & Cipher Configuration (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col space-y-6">
-
-          {/* Section 1: Interactive Workspace */}
+      <main className="flex-grow max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* LEFT COLUMN: Workspace + Cipher Config (7 cols) */}
+        <div className="lg:col-span-7 flex flex-col space-y-5">
           <WorkspaceConsole
             inputText={inputText}
             setInputText={setInputText}
@@ -185,8 +150,6 @@ function App() {
             isCracking={isCracking}
             activeTab={activeTab}
           />
-
-          {/* Section 2: Tabbed Cipher Configurations */}
           <CipherConfig
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -210,16 +173,11 @@ function App() {
             columnarKey={columnarKey}
             setColumnarKey={setColumnarKey}
           />
-
         </div>
 
-        {/* RIGHT COLUMN: Live Cryptanalysis Diagnostics & Crack candidates (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col space-y-6">
-
-          {/* Section 1: Live Diagnostics (IC, top letters) */}
+        {/* RIGHT COLUMN: Cryptanalysis (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col space-y-5">
           <LiveCryptanalysis ioc={ioc} frequencies={frequencies} />
-
-          {/* Section 2: Cracker Candidates Results Panel */}
           <CrackerResults
             activeTab={activeTab}
             crackCandidates={crackCandidates}
@@ -228,9 +186,7 @@ function App() {
             setVigenereKey={setVigenereKey}
             setOutputText={setOutputText}
           />
-
         </div>
-
       </main>
 
       <Toast message={toast?.message ?? null} type={toast?.type ?? 'error'} onClose={() => setToast(null)} />

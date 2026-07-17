@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api import ciphers, cryptanalysis
 
 app = FastAPI(title="Cipher Lab API", version="1.0.0")
 
@@ -16,6 +17,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(ciphers.router)
+app.include_router(cryptanalysis.router)
 
 @app.get("/api/health")
 async def health_check():

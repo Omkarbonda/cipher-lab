@@ -11,7 +11,7 @@ import math
 import pytest
 
 from app.cryptanalysis import frequency, index_of_coincidence as ic, brute_force
-from app.ciphers import caesar, vigenere
+from app.ciphers import affine, beaufort, caesar, rail_fence, vigenere
 
 # ─────────────────────────── Shared test data ───────────────────────────────
 
@@ -321,3 +321,85 @@ class TestCrackVigenere:
     def test_empty_ciphertext_returns_none_best(self):
         result = brute_force.crack_vigenere("", max_key_len=5)
         assert result["best"] is None
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Rail Fence cracker tests
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestCrackRailFence:
+    def test_cracks_known_rails(self):
+        ct = rail_fence.encode(ENGLISH_TEXT, 5)
+        result = brute_force.crack_railfence(ct, max_rails=10)
+        # Rail fence is a transposition cipher, so frequency scoring
+        # cannot distinguish rail counts — all produce the same letter
+        # distribution. The correct rails should appear among candidates.
+        assert result["best"] is not None
+        assert "plaintext" in result["best"]
+        assert 5 in [c["rails"] for c in result["candidates"]]
+
+    def test_empty_ciphertext_returns_none(self):
+        result = brute_force.crack_railfence("", max_rails=10)
+        assert result["best"] is None
+        assert result["candidates"] == []
+
+    def test_non_alpha_only_returns_none(self):
+        result = brute_force.crack_railfence("123!@#", max_rails=10)
+        assert result["best"] is None
+        assert result["candidates"] == []
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Beaufort cracker tests
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestCrackBeaufort:
+    def test_cracks_short_key(self):
+        long_text = ENGLISH_LETTERS_ONLY * 3
+        ct = beaufort.encode(long_text, "KEY")
+        result = brute_force.crack_beaufort(ct, max_key_len=10)
+        assert result["best"] is not None
+        recovered = result["best"]["key"]
+        assert len(recovered) in [3, 6, 9]
+
+    def test_returns_expected_structure(self):
+        ct = beaufort.encode(ENGLISH_LETTERS_ONLY, "AB")
+        result = brute_force.crack_beaufort(ct, max_key_len=5)
+        assert "best" in result
+        assert "candidates" in result
+        if result["best"]:
+            assert "key" in result["best"]
+            assert "plaintext" in result["best"]
+            assert "score" in result["best"]
+
+    def test_empty_ciphertext_returns_none(self):
+        result = brute_force.crack_beaufort("", max_key_len=5)
+        assert result["best"] is None
+        assert result["candidates"] == []
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Affine cracker tests
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TestCrackAffine:
+    def test_cracks_known_params(self):
+        ct = affine.encode(ENGLISH_TEXT, 5, 8)
+        result = brute_force.crack_affine(ct)
+        assert result["best"]["a"] == 5
+        assert result["best"]["b"] == 8
+
+    def test_returns_expected_structure(self):
+        ct = affine.encode(ENGLISH_TEXT, 5, 8)
+        result = brute_force.crack_affine(ct)
+        assert "best" in result
+        assert "candidates" in result
+        assert "total_tried" in result
+        assert "a" in result["best"]
+        assert "b" in result["best"]
+        assert "plaintext" in result["best"]
+        assert "score" in result["best"]
+
+    def test_total_tried_312(self):
+        result = brute_force.crack_affine(ENGLISH_TEXT)
+        assert result["total_tried"] == 312

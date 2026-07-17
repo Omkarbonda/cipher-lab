@@ -15,7 +15,7 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from app.ciphers import caesar, vigenere, substitution, playfair
+from app.ciphers import caesar, vigenere, substitution, playfair, rail_fence, beaufort, affine, columnar
 
 
 # ─────────────────────────── Caesar ────────────────────────────────────────
@@ -227,3 +227,135 @@ class TestPlayfair:
     def test_invalid_ciphertext_odd_length(self):
         with pytest.raises(ValueError):
             playfair.decode("ABC", "KEY")
+
+
+# ─────────────────────────── Rail Fence ─────────────────────────────────────
+
+class TestRailFence:
+    def test_known_vector_encode(self):
+        assert rail_fence.encode("HELLO", 3) == "HOELL"
+
+    def test_known_vector_decode(self):
+        assert rail_fence.decode("HOELL", 3) == "HELLO"
+
+    def test_round_trip(self):
+        pt = "Hello, World!"
+        assert rail_fence.decode(rail_fence.encode(pt, 4), 4) == pt
+
+    def test_preserves_non_alpha(self):
+        # Non-alpha (1,+,=,,, ,?) remain in position; alpha chars transposed
+        ct = rail_fence.encode("1+1=2, right?", 3)
+        assert ct == "1+1=2, rtihg?"
+
+    def test_preserves_case_in_round_trip(self):
+        pt = "AbCdEfG"
+        assert rail_fence.decode(rail_fence.encode(pt, 3), 3) == pt
+
+    def test_empty_string(self):
+        assert rail_fence.encode("", 3) == ""
+        assert rail_fence.decode("", 3) == ""
+
+    def test_identity_rails_one(self):
+        assert rail_fence.encode("Hello, World!", 1) == "Hello, World!"
+
+    def test_rails_less_than_one_raises(self):
+        with pytest.raises(ValueError):
+            rail_fence.encode("Hello", 0)
+
+
+# ─────────────────────────── Beaufort ───────────────────────────────────────
+
+class TestBeaufort:
+    def test_known_vector_encode(self):
+        assert beaufort.encode("HELLO", "D") == "WZSSP"
+
+    def test_known_vector_decode(self):
+        assert beaufort.decode("WZSSP", "D") == "HELLO"
+
+    def test_round_trip(self):
+        pt = "Hello, World!"
+        assert beaufort.decode(beaufort.encode(pt, "KEY"), "KEY") == pt
+
+    def test_reciprocal_property(self):
+        # Beaufort: encode and decode are the same operation
+        assert beaufort.encode("HELLO", "KEY") == beaufort.decode("HELLO", "KEY")
+
+    def test_preserves_non_alpha(self):
+        # Non-alpha (space, !) pass through; alpha chars use key "z" (shift=25)
+        ct = beaufort.encode("ab cd!", "z")
+        assert ct == "zy xw!"
+
+    def test_empty_string(self):
+        assert beaufort.encode("", "KEY") == ""
+        assert beaufort.decode("", "KEY") == ""
+
+    def test_invalid_key_raises(self):
+        with pytest.raises(ValueError):
+            beaufort.encode("abc", "12!")
+
+    def test_empty_key_raises(self):
+        with pytest.raises(ValueError):
+            beaufort.encode("abc", "")
+
+
+# ─────────────────────────── Affine ─────────────────────────────────────────
+
+class TestAffine:
+    def test_known_vector_encode(self):
+        assert affine.encode("HELLO", 5, 8) == "RCLLA"
+
+    def test_known_vector_decode(self):
+        assert affine.decode("RCLLA", 5, 8) == "HELLO"
+
+    def test_round_trip(self):
+        pt = "The Quick Brown Fox Jumps Over The Lazy Dog!"
+        assert affine.decode(affine.encode(pt, 7, 3), 7, 3) == pt
+
+    def test_identity(self):
+        assert affine.encode("Hello, World!", 1, 0) == "Hello, World!"
+
+    def test_preserves_non_alpha(self):
+        ct = affine.encode("Hello, World!", 5, 8)
+        assert ct == "Rclla, Oaplx!"
+
+    def test_empty_string(self):
+        assert affine.encode("", 3, 5) == ""
+        assert affine.decode("", 3, 5) == ""
+
+    def test_non_coprime_a_raises(self):
+        with pytest.raises(ValueError):
+            affine.encode("abc", 2, 1)
+
+    def test_b_outside_range_raises(self):
+        with pytest.raises(ValueError):
+            affine.encode("abc", 3, 30)
+
+
+# ─────────────────────────── Columnar ───────────────────────────────────────
+
+class TestColumnar:
+    def test_known_vector_encode(self):
+        assert columnar.encode("HELLO", "CBA") == "LEOHL"
+
+    def test_known_vector_decode(self):
+        assert columnar.decode("LEOHL", "CBA") == "HELLO"
+
+    def test_round_trip(self):
+        pt = "TheQuickBrownFoxJumpsOverTheLazyDog"
+        assert columnar.decode(columnar.encode(pt, "KEY"), "KEY") == pt
+
+    def test_non_alpha_stripped_in_output(self):
+        ct = columnar.encode("H,e,l,l,o", "KEY")
+        assert ct.isalpha()
+
+    def test_empty_string(self):
+        assert columnar.encode("", "KEY") == ""
+        assert columnar.decode("", "KEY") == ""
+
+    def test_invalid_key_raises(self):
+        with pytest.raises(ValueError):
+            columnar.encode("abc", "12!")
+
+    def test_empty_key_raises(self):
+        with pytest.raises(ValueError):
+            columnar.encode("abc", "")
